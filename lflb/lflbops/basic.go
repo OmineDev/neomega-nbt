@@ -19,6 +19,6 @@ func (o FinityAnyOrNone) Reset()                  {}
 type FinityAny struct{}
 
 func (o FinityAny) Feed(b byte) lflb.Status { return lflb.RET_TERM_OK }
-func (o FinityAny) FeedEof() lflb.Status    { return lflb.RET_TERM_OK }
+func (o FinityAny) FeedEof() lflb.Status    { return lflb.RET_TERM_FAIL }
 func (o FinityAny) String() string          { return "[any]" }
 func (o FinityAny) Reset()                  {}

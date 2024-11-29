@@ -23,6 +23,10 @@ func (tc TransitCond) Allow(b byte) TransitCond {
 	return tc
 }
 
+func (tc TransitCond) Flip() TransitCond {
+	return [4]uint64{^tc[0] | ^tc[1] | ^tc[2] | ^tc[3]}
+}
+
 func (tc TransitCond) Union(tc2 TransitCond) TransitCond {
 	tc[0] |= tc2[0]
 	tc[1] |= tc2[1]
