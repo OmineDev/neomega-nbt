@@ -39,4 +39,7 @@ func main() {
 
 	code = gen_code.GenCodeFromStr("whiteSpace", `/b*`)
 	os.WriteFile("white_space_core.go", []byte(code), 0755)
+
+	code = gen_code.GenCodeFromStr("leftContainer", `("#)|('#)|({#)|([#(/ |(B;#)|(I;#)|(L;#)))`)
+	os.WriteFile("leftContainer.go", []byte(code), 0755)
 }

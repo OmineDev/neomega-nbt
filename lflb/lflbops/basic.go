@@ -1,6 +1,9 @@
 package lflbops
 
-import "fa/lflb"
+import (
+	"fa/lflb"
+	"fmt"
+)
 
 type FinityNone struct{}
 
@@ -22,3 +25,16 @@ func (o FinityAny) Feed(b byte) lflb.Status { return lflb.RET_TERM_OK }
 func (o FinityAny) FeedEof() lflb.Status    { return lflb.RET_TERM_FAIL }
 func (o FinityAny) String() string          { return "[any]" }
 func (o FinityAny) Reset()                  {}
+
+type Specific byte
+
+func (o Specific) Feed(b byte) lflb.Status {
+	if b == byte(o) {
+		return lflb.RET_TERM_OK
+	} else {
+		return lflb.RET_TERM_FAIL
+	}
+}
+func (o Specific) FeedEof() lflb.Status { return lflb.RET_TERM_FAIL }
+func (o Specific) String() string       { return fmt.Sprintf("[%v]", string([]byte{byte(o)})) }
+func (o Specific) Reset()               {}
