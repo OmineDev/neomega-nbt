@@ -26,7 +26,7 @@ func GenCode(name string, table []dfa.TransitEdges) string {
 	} else {
 		s += fmt.Sprintf("	jmpT:=uint16(state)|(uint16(b)>>6)<<%v\n", shift)
 	}
-	s += "	cmp:=1<<((b<<2)>>2)\n"
+	s += "	cmp:=uint64(1)<<((b<<2)>>2)\n"
 	s += "    switch jmpT{\n"
 
 	for _, jmpT := range ord {
