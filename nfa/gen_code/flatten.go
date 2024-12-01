@@ -1,7 +1,7 @@
 package gen_code
 
 import (
-	"fa/nfa/dfa"
+	"snbt/nfa/dfa"
 )
 
 func compueteMaxMarks(table []dfa.TransitEdges) (maxMarks int, maxMarkValue int) {

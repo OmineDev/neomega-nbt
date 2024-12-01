@@ -1,9 +1,9 @@
 package left_container
 
 import (
-	"fa/lflb"
-	"fa/lflb/sources"
-	whitespace "fa/snbt/tokens/white_space"
+	"snbt/lflb"
+	"snbt/lflb/sources"
+	whitespace "snbt/tokens/white_space"
 	"testing"
 )
 

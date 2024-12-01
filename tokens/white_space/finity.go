@@ -1,6 +1,6 @@
 package whitespace
 
-import "fa/lflb"
+import "snbt/lflb"
 
 type FinityWhiteSpace struct{}
 

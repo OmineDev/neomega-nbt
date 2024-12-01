@@ -1,12 +1,12 @@
 package snbt
 
 import (
-	"fa/lflb"
-	"fa/lflb/lflbops"
-	"fa/lflb/sources"
-	whitespace "fa/snbt/tokens/white_space"
 	"math"
 	"reflect"
+	"snbt/lflb"
+	"snbt/lflb/lflbops"
+	"snbt/lflb/sources"
+	whitespace "snbt/tokens/white_space"
 	"testing"
 )
 

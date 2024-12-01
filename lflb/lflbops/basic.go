@@ -1,8 +1,8 @@
 package lflbops
 
 import (
-	"fa/lflb"
 	"fmt"
+	"snbt/lflb"
 )
 
 type FinityNone struct{}

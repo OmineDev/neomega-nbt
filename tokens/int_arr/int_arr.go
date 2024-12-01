@@ -1,6 +1,6 @@
 package int_arr
 
-import "fa/lflb"
+import "snbt/lflb"
 
 type IntArray[I interface {
 	int32 | int8 | int64

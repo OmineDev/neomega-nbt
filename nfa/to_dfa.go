@@ -1,7 +1,7 @@
 package nfa
 
 import (
-	"fa/nfa/dfa"
+	"snbt/nfa/dfa"
 	"sort"
 )
 

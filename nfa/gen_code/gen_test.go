@@ -1,8 +1,8 @@
 package gen_code
 
 import (
-	"fa/nfa"
 	"os"
+	"snbt/nfa"
 	"testing"
 )
 

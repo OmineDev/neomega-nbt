@@ -1,6 +1,6 @@
 package string_token
 
-import "fa/lflb"
+import "snbt/lflb"
 
 type AnyString struct {
 	state byte //0 -> unknown 1-> stringD 2-> stringS 3-> unwrap 5-> stringD+slash 6-> stringS+slash

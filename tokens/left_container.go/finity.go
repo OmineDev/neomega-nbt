@@ -1,7 +1,7 @@
 package left_container
 
 import (
-	"fa/lflb"
+	"snbt/lflb"
 )
 
 type LeftContainerFinity struct {

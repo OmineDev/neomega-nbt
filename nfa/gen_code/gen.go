@@ -1,9 +1,9 @@
 package gen_code
 
 import (
-	"fa/nfa"
-	"fa/nfa/dfa"
 	"fmt"
+	"snbt/nfa"
+	"snbt/nfa/dfa"
 	"sort"
 	"strings"
 )

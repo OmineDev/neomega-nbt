@@ -1,6 +1,6 @@
 package string_token
 
-import "fa/lflb"
+import "snbt/lflb"
 
 // abc"
 type StringD struct {

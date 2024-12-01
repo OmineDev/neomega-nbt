@@ -1,9 +1,9 @@
 package snbt
 
 import (
-	"fa/nfa"
-	"fa/nfa/gen_code"
 	"os"
+	"snbt/nfa"
+	"snbt/nfa/gen_code"
 )
 
 func main() {

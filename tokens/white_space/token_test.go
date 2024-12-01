@@ -1,9 +1,9 @@
 package whitespace
 
 import (
-	"fa/lflb"
-	"fa/lflb/lflbops"
-	"fa/lflb/sources"
+	"snbt/lflb"
+	"snbt/lflb/lflbops"
+	"snbt/lflb/sources"
 	"testing"
 )
 

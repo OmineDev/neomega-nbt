@@ -1,8 +1,8 @@
 package number
 
 import (
-	"fa/lflb"
 	"math"
+	"snbt/lflb"
 )
 
 type NumberFinity struct {

@@ -1,12 +1,12 @@
 package snbt
 
 import (
-	"fa/lflb"
-	"fa/snbt/tokens/int_arr"
-	"fa/snbt/tokens/left_container.go"
-	"fa/snbt/tokens/number"
-	"fa/snbt/tokens/string_token"
 	"fmt"
+	"snbt/lflb"
+	"snbt/tokens/int_arr"
+	"snbt/tokens/left_container.go"
+	"snbt/tokens/number"
+	"snbt/tokens/string_token"
 )
 
 func ReadWhiteSpace[S lflb.Source](src S) {

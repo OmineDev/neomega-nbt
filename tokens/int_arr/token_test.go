@@ -1,10 +1,10 @@
 package int_arr
 
 import (
-	"fa/lflb"
-	"fa/lflb/lflbops"
-	"fa/lflb/sources"
-	whitespace "fa/snbt/tokens/white_space"
+	"snbt/lflb"
+	"snbt/lflb/lflbops"
+	"snbt/lflb/sources"
+	whitespace "snbt/tokens/white_space"
 	"testing"
 )
 

@@ -2,8 +2,8 @@ package nfa
 
 import (
 	"encoding/json"
-	"fa/nfa/dfa"
 	"fmt"
+	"snbt/nfa/dfa"
 	"testing"
 )
 

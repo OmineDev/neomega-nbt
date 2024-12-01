@@ -1,11 +1,11 @@
 package number
 
 import (
-	"fa/lflb"
-	"fa/lflb/lflbops"
-	"fa/lflb/sources"
 	"fmt"
 	"math"
+	"snbt/lflb"
+	"snbt/lflb/lflbops"
+	"snbt/lflb/sources"
 	"testing"
 )
 
