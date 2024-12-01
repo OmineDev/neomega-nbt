@@ -65,6 +65,9 @@ func TestString(t *testing.T) {
 	lflb.ReadFinity(src, lflbops.Specific('\''))
 	stringS.Reset()
 	assertFail(lflb.ReadFinity(src, stringS))
+	if v, _ := src.This(); v != 'a' {
+		t.FailNow()
+	}
 
 	seq = `'abc()  _+:"\'\\测试' "abc()  _+:'\"\\测试" abc_123.+-ABC, `
 	src = sources.NewBytesSourceFromString(seq)
@@ -80,11 +83,17 @@ func TestString(t *testing.T) {
 	src = sources.NewBytesSourceFromString(seq)
 	stringA.Reset()
 	assertFail(lflb.ReadFinity(src, stringA))
+	if v, _ := src.This(); v != '\'' {
+		t.FailNow()
+	}
 
 	seq = `"abc()  _+:'\"\\测试 `
 	src = sources.NewBytesSourceFromString(seq)
 	stringA.Reset()
 	assertFail(lflb.ReadFinity(src, stringA))
+	if v, _ := src.This(); v != '"' {
+		t.FailNow()
+	}
 
 	seq = `abc_123.+-ABC`
 	src = sources.NewBytesSourceFromString(seq)
