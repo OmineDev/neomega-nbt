@@ -14,7 +14,7 @@ func consumeWhiteSpaceAndComma[S lflb.Source](src S) {
 	lflb.ReadFinity(src, whitespace.FinityVariyLenWhiteSpace{})
 }
 
-func assertVal[S lflb.Source, I interface{ int8 | int32 | int64 }](
+func assertArr[S lflb.Source, I interface{ int8 | int32 | int64 }](
 	src S, fi interface {
 		lflb.Finity
 		Val() []I
@@ -46,7 +46,7 @@ func TestString(t *testing.T) {
 		}
 	}
 	assertFail(false)
-	assertVal(src, &IntArray[int32]{}, []int32{12, -34, -567, 89, 10, 11, -12, -13, 14, 15}, t)
+	assertArr(src, &IntArray[int32]{}, []int32{12, -34, -567, 89, 10, 11, -12, -13, 14, 15}, t)
 
 	seq = "12, -34 ,-567, 89,10,11 , -12 ,-13 ,14 ,15   "
 	src = sources.NewBytesSourceFromString(seq)
