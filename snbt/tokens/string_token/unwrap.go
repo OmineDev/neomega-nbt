@@ -1,4 +1,4 @@
-package whitespace
+package string_token
 
 import "fa/lflb"
 
@@ -8,9 +8,6 @@ type UnwrapString struct {
 
 func (o *UnwrapString) Feed(b byte) lflb.Status {
 	if AcceptUnwrapStringFeed(b) {
-		if o.data == nil {
-			o.data = make([]byte, 0, 8)
-		}
 		o.data = append(o.data, b)
 		return lflb.RET_FEED_MORE
 	} else {
@@ -24,7 +21,7 @@ func (o *UnwrapString) Feed(b byte) lflb.Status {
 func AcceptUnwrapStringFeed(b byte) bool {
 	switch b >> 6 {
 	case 0:
-		if (1<<((b<<2)>>2))&114349209288704 > 0 {
+		if (1<<((b<<2)>>2))&288063250384289792 > 0 {
 			return true
 		}
 	case 1:
@@ -52,4 +49,6 @@ func (o *UnwrapString) Val() string {
 	return string(o.data)
 }
 func (o *UnwrapString) String() string { return "[unwarp string]" }
-func (o *UnwrapString) Reset()         {}
+func (o *UnwrapString) Reset() {
+	o.data = nil
+}
