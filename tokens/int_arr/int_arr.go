@@ -41,7 +41,7 @@ func (f *IntArray[I]) Feed(b byte) lflb.Status {
 		f.state = 0x2
 		return lflb.RET_FEED_MORE
 	}
-	if b == ' ' {
+	if b == ' ' || b == 'B' || b == 'b' || b == 'L' || b == 'l' {
 		return lflb.RET_FEED_MORE
 	}
 	if b == '-' {

@@ -35,7 +35,7 @@ func (o *StringD) Val() string {
 func (o *StringD) String() string { return "[string'_']" }
 func (o *StringD) Reset() {
 	o.slash = false
-	o.data = nil
+	o.data = o.data[:0]
 }
 
 // abc'
@@ -71,5 +71,5 @@ func (o *StringS) Val() string {
 func (o *StringS) String() string { return "[string\"_\"]" }
 func (o *StringS) Reset() {
 	o.slash = false
-	o.data = nil
+	o.data = o.data[:0]
 }

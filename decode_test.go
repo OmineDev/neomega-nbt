@@ -1,6 +1,7 @@
 package snbt
 
 import (
+	_ "embed"
 	"math"
 	"reflect"
 	"snbt/lflb"
@@ -351,6 +352,66 @@ func TestSnbtDecode(t *testing.T) {
 			},
 		}, v) {
 			t.FailNow()
+		}
+	}
+}
+
+// copied from Tnze-mc/snbt
+//
+//go:embed test_data/bigTest_test.snbt
+var bigTestSNBT string
+
+func BenchmarkSNBT_bigTest(b *testing.B) {
+	// BenchmarkSNBT_bigTest-8   	   38294	     29204 ns/op	   13858 B/op	     101 allocs/op
+	// speed: 29204 ns/op
+	// memory: allocation 13858 B/op 101 allocs/op
+	for i := 0; i < b.N; i++ {
+
+		src := sources.NewBytesSourceFromString(bigTestSNBT)
+		if _, err := DecodeFrom(src); err != nil {
+			b.Errorf("decode fail: %v", err)
+		}
+	}
+}
+
+//go:embed test_data/1-dimension_codec.snbt
+var dim1SNBT string
+
+func BenchmarkSNBT_1dim(b *testing.B) {
+	// BenchmarkSNBT_1dim-8   	    2395	    472147 ns/op	  266156 B/op	    4930 allocs/op
+	for i := 0; i < b.N; i++ {
+
+		src := sources.NewBytesSourceFromString(dim1SNBT)
+		if _, err := DecodeFrom(src); err != nil {
+			b.Errorf("decode fail: %v", err)
+		}
+	}
+}
+
+//go:embed test_data/58f6356e-b30c-4811-8bfc-d72a9ee99e73.dat.snbt
+var dataSNBT string
+
+func BenchmarkSNBT_data(b *testing.B) {
+	// BenchmarkSNBT_data-8   	   39704	     28428 ns/op	   20653 B/op	     324 allocs/op
+	for i := 0; i < b.N; i++ {
+
+		src := sources.NewBytesSourceFromString(dataSNBT)
+		if _, err := DecodeFrom(src); err != nil {
+			b.Errorf("decode fail: %v", err)
+		}
+	}
+}
+
+//go:embed test_data/level.dat.snbt
+var levelSNBT string
+
+func BenchmarkSNBT_level(b *testing.B) {
+	// BenchmarkSNBT_level-8   	   15963	     70073 ns/op	   48606 B/op	     717 allocs/op
+	for i := 0; i < b.N; i++ {
+
+		src := sources.NewBytesSourceFromString(levelSNBT)
+		if _, err := DecodeFrom(src); err != nil {
+			b.Errorf("decode fail: %v", err)
 		}
 	}
 }

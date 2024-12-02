@@ -24,7 +24,26 @@ func ReadWhiteSpace[S lflb.Source](src S) {
 
 }
 
+type preAlloc struct {
+	*left_container.LeftContainerFinity
+	*string_token.StringD
+	*string_token.StringS
+	*string_token.UnwrapString
+	*number.NumberFinity
+}
+
 func DecodeFrom[S lflb.Source](src S) (v any, err error) {
+	pa := &preAlloc{
+		LeftContainerFinity: &left_container.LeftContainerFinity{},
+		StringD:             &string_token.StringD{},
+		StringS:             &string_token.StringS{},
+		UnwrapString:        &string_token.UnwrapString{},
+		NumberFinity:        &number.NumberFinity{},
+	}
+	return decodeFrom(src, pa)
+}
+
+func decodeFrom[S lflb.Source](src S, preAlloc *preAlloc) (v any, err error) {
 	// consume white space
 	// equal to: lflb.ReadFinity(src, whitespace.FinityVariyLenWhiteSpace{})
 	// ReadWhiteSpace(src)
@@ -35,19 +54,22 @@ func DecodeFrom[S lflb.Source](src S) (v any, err error) {
 	}
 
 	// check is left container: 1" 2' 3{ 4[ 5[I; 6[B; 7[L
-	leftContainer := &left_container.LeftContainerFinity{}
+	leftContainer := preAlloc.LeftContainerFinity
+	leftContainer.Reset()
 	lflb.ReadFinity(src, leftContainer)
 	switch leftContainer.ContainerType {
 	case 1:
 		// "
-		stringD := &string_token.StringD{}
+		stringD := preAlloc.StringD
+		stringD.Reset()
 		if !lflb.ReadFinity(src, stringD) {
 			return nil, ErrStringDNotTerminated
 		}
 		return stringD.Val(), nil
 	case 2:
 		// '
-		stringS := &string_token.StringS{}
+		stringS := preAlloc.StringS
+		stringS.Reset()
 		if !lflb.ReadFinity(src, stringS) {
 			return nil, ErrStringSNotTerminated
 		}
@@ -75,15 +97,16 @@ func DecodeFrom[S lflb.Source](src S) (v any, err error) {
 		return intArr.Val(), nil
 	case 4:
 		// [
-		return DecodeListFrom(src)
+		return DecodeListFrom(src, preAlloc)
 	case 3:
-		return DecodeCompoundFrom(src)
+		return DecodeCompoundFrom(src, preAlloc)
 	}
 
 	// check is number
 	// 123 is number
 	// 123_abc is unwrap string
-	numberToken := &number.NumberFinity{}
+	numberToken := preAlloc.NumberFinity
+	numberToken.Reset()
 	if ok, counter := lflb.ReadFinityWithCounter(src, numberToken); ok {
 		if b, eof := src.This(); eof || !string_token.AcceptUnwrapStringFeed(b) {
 			return numberToken.Val(), nil
@@ -94,7 +117,8 @@ func DecodeFrom[S lflb.Source](src S) (v any, err error) {
 	}
 
 	// check is unwrap string
-	unwrapString := &string_token.UnwrapString{}
+	unwrapString := preAlloc.UnwrapString
+	unwrapString.Reset()
 	if lflb.ReadFinity(src, unwrapString) {
 		return unwrapString.Val(), nil
 	}
@@ -103,7 +127,7 @@ func DecodeFrom[S lflb.Source](src S) (v any, err error) {
 	return nil, ErrNotSNBT
 }
 
-func DecodeListFrom[S lflb.Source](src S) (v []any, err error) {
+func DecodeListFrom[S lflb.Source](src S, preAlloc *preAlloc) (v []any, err error) {
 	var b byte
 	var eof bool
 	out := []any{}
@@ -116,7 +140,7 @@ func DecodeListFrom[S lflb.Source](src S) (v []any, err error) {
 		} else if eof {
 			return nil, ErrListNotTerminated
 		}
-		elem, valErr := DecodeFrom(src)
+		elem, valErr := decodeFrom(src, preAlloc)
 		if valErr == nil {
 			out = append(out, elem)
 		} else {
@@ -144,7 +168,7 @@ func DecodeListFrom[S lflb.Source](src S) (v []any, err error) {
 	}
 }
 
-func DecodeCompoundFrom[S lflb.Source](src S) (v map[string]any, err error) {
+func DecodeCompoundFrom[S lflb.Source](src S, preAlloc *preAlloc) (v map[string]any, err error) {
 	var b byte
 	var eof bool
 	out := map[string]any{}
@@ -169,7 +193,7 @@ func DecodeCompoundFrom[S lflb.Source](src S) (v map[string]any, err error) {
 		}
 		src.Next()
 		ReadWhiteSpace(src)
-		elem, valErr := DecodeFrom(src)
+		elem, valErr := decodeFrom(src, preAlloc)
 		if valErr == nil {
 			out[key] = elem
 		} else {

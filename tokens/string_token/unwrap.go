@@ -50,5 +50,5 @@ func (o *UnwrapString) Val() string {
 }
 func (o *UnwrapString) String() string { return "[unwarp string]" }
 func (o *UnwrapString) Reset() {
-	o.data = nil
+	o.data = o.data[:0]
 }

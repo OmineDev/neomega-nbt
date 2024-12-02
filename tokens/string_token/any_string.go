@@ -96,5 +96,5 @@ func (o *AnyString) Val() string {
 func (o *AnyString) String() string { return "[string]" }
 func (o *AnyString) Reset() {
 	o.state = 0
-	o.data = nil
+	o.data = o.data[:0]
 }
