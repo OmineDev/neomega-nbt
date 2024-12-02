@@ -362,12 +362,12 @@ func TestSnbtDecode(t *testing.T) {
 var bigTestSNBT string
 
 func BenchmarkSNBT_bigTest(b *testing.B) {
-	// BenchmarkSNBT_bigTest-8   	   38294	     29204 ns/op	   13858 B/op	     101 allocs/op
+	// BenchmarkSNBT_bigTest-8   	   38328	     28354 ns/op	    7683 B/op	      99 allocs/op
 	// speed: 29204 ns/op
 	// memory: allocation 13858 B/op 101 allocs/op
+	src := sources.NewBytesSourceFromString(bigTestSNBT)
 	for i := 0; i < b.N; i++ {
-
-		src := sources.NewBytesSourceFromString(bigTestSNBT)
+		src.Reset()
 		if _, err := DecodeFrom(src); err != nil {
 			b.Errorf("decode fail: %v", err)
 		}
@@ -378,10 +378,10 @@ func BenchmarkSNBT_bigTest(b *testing.B) {
 var dim1SNBT string
 
 func BenchmarkSNBT_1dim(b *testing.B) {
-	// BenchmarkSNBT_1dim-8   	    2395	    472147 ns/op	  266156 B/op	    4930 allocs/op
+	// BenchmarkSNBT_1dim-8   	    2476	    443519 ns/op	  184238 B/op	    4928 allocs/op
+	src := sources.NewBytesSourceFromString(dim1SNBT)
 	for i := 0; i < b.N; i++ {
-
-		src := sources.NewBytesSourceFromString(dim1SNBT)
+		src.Reset()
 		if _, err := DecodeFrom(src); err != nil {
 			b.Errorf("decode fail: %v", err)
 		}
@@ -392,10 +392,10 @@ func BenchmarkSNBT_1dim(b *testing.B) {
 var dataSNBT string
 
 func BenchmarkSNBT_data(b *testing.B) {
-	// BenchmarkSNBT_data-8   	   39704	     28428 ns/op	   20653 B/op	     324 allocs/op
+	// BenchmarkSNBT_data-8   	   36336	     29726 ns/op	   16523 B/op	     322 allocs/op
+	src := sources.NewBytesSourceFromString(dataSNBT)
 	for i := 0; i < b.N; i++ {
-
-		src := sources.NewBytesSourceFromString(dataSNBT)
+		src.Reset()
 		if _, err := DecodeFrom(src); err != nil {
 			b.Errorf("decode fail: %v", err)
 		}
@@ -406,10 +406,10 @@ func BenchmarkSNBT_data(b *testing.B) {
 var levelSNBT string
 
 func BenchmarkSNBT_level(b *testing.B) {
-	// BenchmarkSNBT_level-8   	   15963	     70073 ns/op	   48606 B/op	     717 allocs/op
+	// BenchmarkSNBT_level-8   	   16491	     69444 ns/op	   37689 B/op	     715 allocs/op
+	src := sources.NewBytesSourceFromString(levelSNBT)
 	for i := 0; i < b.N; i++ {
-
-		src := sources.NewBytesSourceFromString(levelSNBT)
+		src.Reset()
 		if _, err := DecodeFrom(src); err != nil {
 			b.Errorf("decode fail: %v", err)
 		}

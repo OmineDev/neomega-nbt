@@ -14,6 +14,10 @@ func NewBytesSourceFromString(inp string) *BytesSource {
 	}
 }
 
+func (bs *BytesSource) Reset() {
+	bs.p = 0
+}
+
 func (bs *BytesSource) This() (b byte, eof bool) {
 	if bs.p == len(bs.data) {
 		return 0, true
