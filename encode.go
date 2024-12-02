@@ -12,9 +12,13 @@ import (
 	"unsafe"
 )
 
-func EncodeTo(w io.Writer, input any) (err error) {
+var ErrCannotAcceptType = errors.New("cannot accept input type")
+var ErrCannotEncodeListElem = "when encode element in list, an error occours"
+var ErrCannotEncodeCompoundValue = "when encode compound value, an error occours"
+
+func EncodeTo(w io.Writer, input any, caster func(any) any) (err error) {
 	writer := newWriterWithBuffer(w)
-	err = encodeTo(writer, input, nil, false)
+	err = encodeTo(writer, input, caster, false)
 	if err != nil {
 		return err
 	}
@@ -34,10 +38,6 @@ func Encode(input any, caster func(any) any) (out []byte, err error) {
 	}
 	return buf.Bytes(), nil
 }
-
-var ErrCannotAcceptType = errors.New("cannot accept input type")
-var ErrCannotEncodeListElem = "when encode element in list, an error occours"
-var ErrCannotEncodeCompoundValue = "when encode compound value, an error occours"
 
 func encodeTo(w *writerWithBuffer, input any, caster func(any) any, casted bool) (err error) {
 	switch data := input.(type) {
@@ -190,6 +190,7 @@ func encodeStructMemberToWithCast(w *writerWithBuffer, val reflect.Value, caster
 }
 
 func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, casted bool) (err error) {
+	// we don't want caster allocate anything like []any{} or map[string]any{}
 	val := reflect.ValueOf(orig)
 	kind := val.Kind()
 	switch kind {
