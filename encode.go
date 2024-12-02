@@ -277,9 +277,10 @@ func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, caste
 					}
 				}
 				w.WriteByte(']')
+			} else {
+				w.WriteByte('[')
+				w.WriteByte(']')
 			}
-			w.WriteByte('[')
-			w.WriteByte(']')
 
 			return nil
 		}
