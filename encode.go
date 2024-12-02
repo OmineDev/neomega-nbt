@@ -6,8 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"sort"
+	"reflect"
 	"strconv"
+	"strings"
 	"unsafe"
 )
 
@@ -115,20 +116,234 @@ func encodeTo(w *writerWithBuffer, input any, caster func(any) any, casted bool)
 		return nil
 	case map[string]any:
 		w.WriteString("{")
-		keys := make([]string, 0, len(data))
-		for k := range data {
-			keys = append(keys, k)
-		}
-		sort.Strings(keys)
-		for i, k := range keys {
-			if i != 0 {
+		// keys := make([]string, 0, len(data))
+		// for k := range data {
+		// 	keys = append(keys, k)
+		// }
+		// sort.Strings(keys)
+		first := true
+		for k, v := range data {
+			if !first {
 				w.WriteByte(',')
 				w.WriteByte(' ')
+			} else {
+				first = false
 			}
 			writeString(w, k)
 			w.WriteByte(':')
 			w.WriteByte(' ')
-			err = encodeTo(w, data[k], caster, false)
+			err = encodeTo(w, v, caster, false)
+			if err != nil {
+				return fmt.Errorf("%v: %v", ErrCannotEncodeCompoundValue, err)
+			}
+		}
+		w.WriteByte('}')
+		return nil
+	default:
+		return encodeToWithCast(w, input, caster, casted)
+	}
+}
+
+func encodeStructMemberToWithCast(w *writerWithBuffer, val reflect.Value, caster func(any) any, first bool) (err error) {
+	for i := 0; i < val.NumField(); i++ {
+		if i != 0 {
+			first = false
+		}
+		fieldType := val.Type().Field(i)
+		fieldValue := val.Field(i)
+		tag := fieldType.Tag.Get("nbt")
+		if fieldType.PkgPath != "" || tag == "-" {
+			continue
+		}
+		if fieldType.Anonymous {
+			// The field was anonymous, so we write that in the same compound tag as this one.
+			encodeStructMemberToWithCast(w, fieldValue, caster, first)
+			continue
+		}
+		tagName := fieldType.Name
+		if strings.HasSuffix(tag, ",omitempty") {
+			tag = strings.TrimSuffix(tag, ",omitempty")
+			if reflect.DeepEqual(fieldValue.Interface(), reflect.Zero(fieldValue.Type()).Interface()) {
+				// The tag had the ',omitempty' tag, meaning it should be omitted if it has the zero
+				// value. If this is reached, that was the case, and we skip it.
+				continue
+			}
+		}
+		if tag != "" {
+			tagName = tag
+		}
+		if !first {
+			w.WriteByte(',')
+			w.WriteByte(' ')
+		} else {
+			first = false
+		}
+		writeString(w, tagName)
+		w.WriteByte(':')
+		w.WriteByte(' ')
+		err = encodeTo(w, fieldValue.Interface(), caster, false)
+		if err != nil {
+			return fmt.Errorf("%v: %v", ErrCannotEncodeCompoundValue, err)
+		}
+	}
+	return nil
+}
+
+func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, casted bool) (err error) {
+	val := reflect.ValueOf(orig)
+	kind := val.Kind()
+	switch kind {
+	case reflect.Array:
+		switch val.Type().Elem().Kind() {
+		case reflect.Int8:
+			w.WriteString("[B; ")
+			n := val.Cap()
+			for i := 0; i < n; i++ {
+				if i != 0 {
+					w.WriteByte(',')
+					w.WriteByte(' ')
+				}
+				writeInt(w, int8(val.Index(i).Int()))
+			}
+			w.WriteByte(']')
+			return nil
+		case reflect.Int32:
+			w.WriteString("[I; ")
+			n := val.Cap()
+			for i := 0; i < n; i++ {
+				if i != 0 {
+					w.WriteByte(',')
+					w.WriteByte(' ')
+				}
+				writeInt(w, int32(val.Index(i).Int()))
+			}
+			w.WriteByte(']')
+			return nil
+		case reflect.Int64:
+			w.WriteString("[L; ")
+			n := val.Cap()
+			for i := 0; i < n; i++ {
+				if i != 0 {
+					w.WriteByte(',')
+					w.WriteByte(' ')
+				}
+				writeInt(w, int64(val.Index(i).Int()))
+			}
+			w.WriteByte(']')
+			return nil
+		default:
+			n := val.Cap()
+			if n > 0 {
+				decided := 0
+				if caster != nil {
+					new := caster(val.Index(0).Interface())
+					if v, ok := new.(int8); ok {
+						decided = 1
+						w.WriteString("[B; ")
+						writeInt(w, v)
+					} else if v, ok := new.(int32); ok {
+						decided = 2
+						w.WriteString("[I; ")
+						writeInt(w, v)
+					} else if v, ok := new.(int64); ok {
+						decided = 3
+						w.WriteString("[L; ")
+						writeInt(w, v)
+					} else {
+						w.WriteString("[ ")
+						err = encodeTo(w, new, caster, false)
+						if err != nil {
+							return fmt.Errorf("%v: %v", ErrCannotEncodeListElem, err)
+						}
+					}
+				}
+				for i := 1; i < n; i++ {
+					w.WriteByte(',')
+					w.WriteByte(' ')
+					v := caster(val.Index(i).Interface())
+					switch decided {
+					case 0:
+						err = encodeTo(w, v, caster, false)
+						if err != nil {
+							return fmt.Errorf("%v: %v", ErrCannotEncodeListElem, err)
+						}
+					case 1:
+						writeInt(w, v.(int8))
+					case 2:
+						writeInt(w, v.(int32))
+					case 3:
+						writeInt(w, v.(int64))
+					}
+				}
+				w.WriteByte(']')
+			}
+			w.WriteByte('[')
+			w.WriteByte(']')
+
+			return nil
+		}
+	case reflect.Slice:
+		switch val.Type().Elem().Kind() {
+		case reflect.Int32:
+			ret := unsafe.Slice((*int32)(unsafe.Pointer(val.Pointer())), val.Len())
+			return encodeTo(w, ret, caster, false)
+		case reflect.Int8:
+			ret := unsafe.Slice((*int8)(unsafe.Pointer(val.Pointer())), val.Len())
+			return encodeTo(w, ret, caster, false)
+		case reflect.Int64:
+			ret := unsafe.Slice((*int64)(unsafe.Pointer(val.Pointer())), val.Len())
+			return encodeTo(w, ret, caster, false)
+		default:
+			w.WriteString("[ ")
+			for i := 0; i < val.Len(); i++ {
+				if i != 0 {
+					w.WriteByte(',')
+					w.WriteByte(' ')
+				}
+				err = encodeTo(w, val.Index(i).Interface(), caster, false)
+				if err != nil {
+					return fmt.Errorf("%v: %v", ErrCannotEncodeListElem, err)
+				}
+			}
+			w.WriteByte(']')
+			return nil
+		}
+	case reflect.Struct:
+		w.WriteByte('{')
+		err = encodeStructMemberToWithCast(w, val, caster, true)
+		if err != nil {
+			return err
+		}
+		w.WriteByte('}')
+		return nil
+	case reflect.Map:
+		stringK := true
+		if val.Type().Key().Kind() != reflect.String {
+			stringK = false
+		}
+		iter := val.MapRange()
+		w.WriteString("{")
+		// keys := make([]string, 0, len(data))
+		// for k := range data {
+		// 	keys = append(keys, k)
+		// }
+		// sort.Strings(keys)
+		first := true
+		for iter.Next() {
+			if !first {
+				w.WriteByte(',')
+				w.WriteByte(' ')
+			} else {
+				first = false
+			}
+			if stringK {
+				writeString(w, iter.Key().String())
+			} else {
+				w.printf("%v", iter.Key().Interface())
+			}
+			w.WriteByte(':')
+			w.WriteByte(' ')
+			err = encodeTo(w, iter.Value().Interface(), caster, false)
 			if err != nil {
 				return fmt.Errorf("%v: %v", ErrCannotEncodeCompoundValue, err)
 			}
@@ -137,9 +352,9 @@ func encodeTo(w *writerWithBuffer, input any, caster func(any) any, casted bool)
 		return nil
 	default:
 		if !casted && caster != nil {
-			input = caster(input)
-			if input != nil {
-				return encodeTo(w, input, caster, true)
+			new := caster(orig)
+			if new != nil {
+				return encodeTo(w, new, caster, true)
 			}
 		}
 		return ErrCannotAcceptType
@@ -151,9 +366,9 @@ type writerWithBuffer struct {
 	buf []byte
 }
 
-// func (w *writerWithBuffer) printf(f string, data any) {
-// 	fmt.Fprintf(w.Writer, f, data)
-// }
+func (w *writerWithBuffer) printf(f string, data any) {
+	fmt.Fprintf(w.Writer, f, data)
+}
 
 func writeString(w *writerWithBuffer, data string) {
 	w.WriteByte('"')
