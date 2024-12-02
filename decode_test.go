@@ -44,6 +44,7 @@ func assertArr[S lflb.Source, I any](
 }
 
 func TestSnbtDecode(t *testing.T) {
+
 	seq := " \t\n\v\f\r  "
 	src := sources.NewBytesSourceFromString(seq)
 	if v, err := DecodeFrom(src); err != ErrNotSNBT {
@@ -324,6 +325,10 @@ func TestSnbtDecode(t *testing.T) {
 	seq = "[ 12, -34 ,-567, 89,10,11 , -12 ,-13 ,14 ,15   ] "
 	src = sources.NewBytesSourceFromString(seq)
 	assertArr(src, []int32{12, -34, -567, 89, 10, 11, -12, -13, 14, 15}, t)
+
+	seq = "[']',']'] "
+	src = sources.NewBytesSourceFromString(seq)
+	assertArr(src, []any{"]", "]"}, t)
 
 	// not allowed in snbt, but we allow this
 	seq = "[ 12, 123_abc, -12.34E3f ,'bcd',[a,b,bc],{a:1,b:1,c:2}] "
