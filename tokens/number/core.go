@@ -3,6 +3,15 @@ package number
 type NumberMarkFns [12]func()
 
 // `((/ |-#)(((/d/d*)#(/ |((b|B)#)|((s|S)#)|((l|L)#)))|((/d/d*./d*)|(/d*./d/d*))#)(/ |((e|E)(/ |-#)(/d/d*)#))(/ |((f|F)#)|((d|D)#)))|(true#)|(false#)`
+// explain:
+// (/ |-#) optional sign
+// (/d/d*)# base number (interger or number before . in float/double)
+// (/ |((b|B)#)|((s|S)#)|((l|L)#)) optional type mark, b,s,l, for int32, / |
+// ((/d/d*./d*)|(/d*./d/d*))#) float which in .123 or 123. formate
+// (e|E) exp mark
+// (/ |((f|F)#)|((d|D)#))) type mark for flot32, float64
+// cast (true#)|(false#) to 1/0
+
 func NumberFeed(state uint8, b uint8) (nextMarkTermAccept uint16) {
 	jmpT := uint16(state) | (uint16(b)>>6)<<6
 	cmp := uint64(1) << ((b << 2) >> 2)
