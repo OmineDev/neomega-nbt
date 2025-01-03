@@ -93,8 +93,8 @@ type MyStructSub struct {
 }
 
 type MyStruct struct {
-	MyStructSub
 	SB MyTypeInt32 `nbt:"sb"`
+	MyStructSub
 }
 
 func TestSnbtEncodeWithCast(t *testing.T) {

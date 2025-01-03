@@ -143,11 +143,8 @@ func encodeTo(w *writerWithBuffer, input any, caster func(any) any, casted bool)
 	}
 }
 
-func encodeStructMemberToWithCast(w *writerWithBuffer, val reflect.Value, caster func(any) any, first bool) (err error) {
+func takeStructMember(val reflect.Value, out map[string]any) {
 	for i := 0; i < val.NumField(); i++ {
-		if i != 0 {
-			first = false
-		}
 		fieldType := val.Type().Field(i)
 		fieldValue := val.Field(i)
 		tag := fieldType.Tag.Get("nbt")
@@ -156,7 +153,7 @@ func encodeStructMemberToWithCast(w *writerWithBuffer, val reflect.Value, caster
 		}
 		if fieldType.Anonymous {
 			// The field was anonymous, so we write that in the same compound tag as this one.
-			encodeStructMemberToWithCast(w, fieldValue, caster, first)
+			takeStructMember(fieldValue, out)
 			continue
 		}
 		tagName := fieldType.Name
@@ -171,21 +168,8 @@ func encodeStructMemberToWithCast(w *writerWithBuffer, val reflect.Value, caster
 		if tag != "" {
 			tagName = tag
 		}
-		if !first {
-			w.WriteByte(',')
-			w.WriteByte(' ')
-		} else {
-			first = false
-		}
-		writeString(w, tagName)
-		w.WriteByte(':')
-		w.WriteByte(' ')
-		err = encodeTo(w, fieldValue.Interface(), caster, false)
-		if err != nil {
-			return fmt.Errorf("%v: %v", ErrCannotEncodeCompoundValue, err)
-		}
+		out[tagName] = fieldValue.Interface()
 	}
-	return nil
 }
 
 func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, casted bool) (err error) {
@@ -310,13 +294,9 @@ func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, caste
 			return nil
 		}
 	case reflect.Struct:
-		w.WriteByte('{')
-		err = encodeStructMemberToWithCast(w, val, caster, true)
-		if err != nil {
-			return err
-		}
-		w.WriteByte('}')
-		return nil
+		out := map[string]any{}
+		takeStructMember(val, out)
+		return encodeToWithCast(w, out, caster, false)
 	case reflect.Map:
 		stringK := true
 		if val.Type().Key().Kind() != reflect.String {
