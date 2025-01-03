@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"unsafe"
@@ -116,19 +117,17 @@ func encodeTo(w *writerWithBuffer, input any, caster func(any) any, casted bool)
 		return nil
 	case map[string]any:
 		w.WriteString("{")
-		// keys := make([]string, 0, len(data))
-		// for k := range data {
-		// 	keys = append(keys, k)
-		// }
-		// sort.Strings(keys)
-		first := true
-		for k, v := range data {
-			if !first {
+		keys := make([]string, 0, len(data))
+		for k := range data {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		for i, k := range keys {
+			if i != 0 {
 				w.WriteByte(',')
 				w.WriteByte(' ')
-			} else {
-				first = false
 			}
+			v := data[k]
 			writeString(w, k)
 			w.WriteByte(':')
 			w.WriteByte(' ')
@@ -324,34 +323,18 @@ func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, caste
 			stringK = false
 		}
 		iter := val.MapRange()
-		w.WriteString("{")
-		// keys := make([]string, 0, len(data))
-		// for k := range data {
-		// 	keys = append(keys, k)
-		// }
-		// sort.Strings(keys)
-		first := true
+		unsortedMap := map[string]any{}
+		// take data
 		for iter.Next() {
-			if !first {
-				w.WriteByte(',')
-				w.WriteByte(' ')
-			} else {
-				first = false
-			}
+			key := ""
 			if stringK {
-				writeString(w, iter.Key().String())
+				key = iter.Key().String()
 			} else {
-				w.printf("%v", iter.Key().Interface())
+				key = fmt.Sprintf("%v", iter.Key().Interface())
 			}
-			w.WriteByte(':')
-			w.WriteByte(' ')
-			err = encodeTo(w, iter.Value().Interface(), caster, false)
-			if err != nil {
-				return fmt.Errorf("%v: %v", ErrCannotEncodeCompoundValue, err)
-			}
+			unsortedMap[key] = iter.Value().Interface()
 		}
-		w.WriteByte('}')
-		return nil
+		return encodeTo(w, unsortedMap, caster, false)
 	default:
 		if !casted && caster != nil {
 			new := caster(orig)

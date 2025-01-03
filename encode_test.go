@@ -64,7 +64,7 @@ func TestSnbtEncode(t *testing.T) {
 					"abc": int32(123)},
 			},
 		},
-		`{"abc": 123, "测试": -4b, "abc\\\"": "abc\\\"", "@{}<>!-=()[]*&^%$#/+~.\";": [ 1b, -2, "bc", {"abc": 123}]}`,
+		`{"@{}<>!-=()[]*&^%$#/+~.\";": [ 1b, -2, "bc", {"abc": 123}], "abc": 123, "abc\\\"": "abc\\\"", "测试": -4b}`,
 	)
 }
 
@@ -165,9 +165,8 @@ func TestSnbtEncodeWithCast(t *testing.T) {
 					"abc": int32(123)},
 			},
 		},
-		`{"abc": 123, "测试": -4b, "abc\\\"": "abc\\\"", "@{}<>!-=()[]*&^%$#/+~.\";": [ 1b, -2, "bc", {"abc": 123}]}`,
+		`{"@{}<>!-=()[]*&^%$#/+~.\";": [ 1b, -2, "bc", {"abc": 123}], "abc": 123, "abc\\\"": "abc\\\"", "测试": -4b}`,
 	)
-
 	assertVal(
 		MyStruct{
 			MyStructSub: MyStructSub{
