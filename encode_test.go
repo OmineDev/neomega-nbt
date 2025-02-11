@@ -46,8 +46,8 @@ func TestSnbtEncode(t *testing.T) {
 	assertVal(float64(123.4567e-20), `0.000000000000000001234567d`)
 
 	assertVal([]int32{-123, 456, 7, -8, 0, 9}, `[I; -123, 456, 7, -8, 0, 9]`)
-	assertVal([]int64{-123, 456, 7, -8, 0, 9}, `[L; -123, 456, 7, -8, 0, 9]`)
-	assertVal([]int8{-123, 45, 7, -8, 0, 9}, `[B; -123, 45, 7, -8, 0, 9]`)
+	assertVal([]int64{-123, 456, 7, -8, 0, 9}, `[L; -123l, 456l, 7l, -8l, 0l, 9l]`)
+	assertVal([]int8{-123, 45, 7, -8, 0, 9}, `[B; -123b, 45b, 7b, -8b, 0b, 9b]`)
 
 	assertVal([]any{int32(123), int8(-4), "abc\\\"", []any{int8(1), int32(-2), "bc"}}, `[ 123, -4b, "abc\\\"", [ 1b, -2, "bc"]]`)
 
@@ -66,6 +66,19 @@ func TestSnbtEncode(t *testing.T) {
 		},
 		`{"@{}<>!-=()[]*&^%$#/+~.\";": [ 1b, -2, "bc", {"abc": 123}], "abc": 123, "abc\\\"": "abc\\\"", "测试": -4b}`,
 	)
+}
+
+func TestSnbtArrEncode(t *testing.T) {
+	assertVal := func(v any, out string) {
+		get, err := Encode(v, DefaultCaster)
+		if err != nil {
+			t.Fatalf("when encode %v, expect: %v, get err: %v", v, out, err)
+		} else if string(get) != out {
+			t.Fatalf("when encode %v, expect: %v, get: %v", v, out, string(get))
+		}
+	}
+	assertVal([]int8{1, 2, 3}, `[B; 1b, 2b, 3b]`)
+	assertVal([]int64{1, 2, 3}, `[L; 1l, 2l, 3l]`)
 }
 
 type MyString string
@@ -143,12 +156,12 @@ func TestSnbtEncodeWithCast(t *testing.T) {
 	assertVal(MyBool(false), "0b")
 
 	assertVal(MyArrInt32{-123, 456, 7}, `[I; -123, 456, 7]`)
-	assertVal(MyArrInt64{-123, 456, 7}, `[L; -123, 456, 7]`)
-	assertVal(MyArrInt8{-123, 45, 7}, `[B; -123, 45, 7]`)
+	assertVal(MyArrInt64{-123, 456, 7}, `[L; -123l, 456l, 7l]`)
+	assertVal(MyArrInt8{-123, 45, 7}, `[B; -123b, 45b, 7b]`)
 
 	assertVal(MySliceInt32{-123, 456, 7, -8, 0, 9}, `[I; -123, 456, 7, -8, 0, 9]`)
-	assertVal(MySliceInt64{-123, 456, 7, -8, 0, 9}, `[L; -123, 456, 7, -8, 0, 9]`)
-	assertVal(MySliceInt8{-123, 45, 7, -8, 0, 9}, `[B; -123, 45, 7, -8, 0, 9]`)
+	assertVal(MySliceInt64{-123, 456, 7, -8, 0, 9}, `[L; -123l, 456l, 7l, -8l, 0l, 9l]`)
+	assertVal(MySliceInt8{-123, 45, 7, -8, 0, 9}, `[B; -123b, 45b, 7b, -8b, 0b, 9b]`)
 
 	assertVal(MySliceAny{int32(123), int8(-4), "abc\\\"", []any{int8(1), int32(-2), "bc"}}, `[ 123, -4b, "abc\\\"", [ 1b, -2, "bc"]]`)
 

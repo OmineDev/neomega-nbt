@@ -49,21 +49,21 @@ func TestSnbtDecode(t *testing.T) {
 	seq := " \t\n\v\f\r  "
 	src := sources.NewBytesSourceFromString(seq)
 	if v, err := DecodeFrom(src); err != ErrNotSNBT {
-		t.Logf("get v: %v\n", v)
+		t.Errorf("get v: %v\n", v)
 		t.FailNow()
 	}
 
 	seq = ""
 	src = sources.NewBytesSourceFromString(seq)
 	if v, err := DecodeFrom(src); err != ErrNoData || v != nil {
-		t.Logf("get v: %v\n", v)
+		t.Errorf("get v: %v\n", v)
 		t.FailNow()
 	}
 
 	seq = "abc"
 	src = sources.NewBytesSourceFromString(seq)
 	if v, err := DecodeFrom(src); err != nil || v != "abc" {
-		t.Logf("get v: %v\n", v)
+		t.Errorf("get v: %v\n", v)
 		t.FailNow()
 	}
 
@@ -71,14 +71,14 @@ func TestSnbtDecode(t *testing.T) {
 	seq = "-123"
 	src = sources.NewBytesSourceFromString(seq)
 	if v, err := DecodeFrom(src); err != nil || v != int32(-123) {
-		t.Logf("get v: %v\n", v)
+		t.Errorf("get v: %v\n", v)
 		t.FailNow()
 	}
 
 	seq = "123_abc"
 	src = sources.NewBytesSourceFromString(seq)
 	if v, err := DecodeFrom(src); err != nil || v != "123_abc" {
-		t.Logf("get v: %v\n", v)
+		t.Errorf("get v: %v\n", v)
 		t.FailNow()
 	}
 
@@ -194,25 +194,25 @@ func TestSnbtDecode(t *testing.T) {
 	readNext()
 	assertNumber(int64(-104), 'L')
 	readNext()
-	assertNumber(float32(-56.78), 'F')
+	assertNumber(float64(-56.78), 'D')
 	readNext()
-	assertNumber(float32(3.2), 'F')
+	assertNumber(float64(3.2), 'D')
 	readNext()
-	assertNumber(float32(-3.0), 'F')
+	assertNumber(float64(-3.0), 'D')
 	readNext()
-	assertNumber(float32(-0.2), 'F')
+	assertNumber(float64(-0.2), 'D')
 	readNext()
-	assertNumber(float32(-234.0), 'F')
+	assertNumber(float64(-234.0), 'D')
 	readNext()
-	assertNumber(float32(-0.456), 'F')
+	assertNumber(float64(-0.456), 'D')
 	readNext()
-	assertNumber(float32(1.23), 'F')
+	assertNumber(float64(1.23), 'D')
 	readNext()
-	assertNumber(float32(-4.56), 'F')
+	assertNumber(float64(-4.56), 'D')
 	readNext()
-	assertNumber(float32(30), 'F')
+	assertNumber(float64(30), 'D')
 	readNext()
-	assertNumber(float32(45.58e-12), 'F')
+	assertNumber(float64(45.58e-12), 'D')
 	readNext()
 	assertNumber(float32(123.456e-8), 'F')
 	readNext()

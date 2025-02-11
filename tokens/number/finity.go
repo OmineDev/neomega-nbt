@@ -34,7 +34,7 @@ func (o *NumberFinity) handleMark(b, m uint8) {
 	case 4:
 		o.dataT = 3
 	case 5:
-		o.dataT = 4
+		o.dataT = 5
 		if b != '.' {
 			o.tailOffset += 1
 			o.tailVal = o.tailVal * 10
@@ -43,7 +43,7 @@ func (o *NumberFinity) handleMark(b, m uint8) {
 	case 6:
 		o.negExp = true
 	case 7:
-		o.dataT = 4
+		o.dataT = 5
 		o.exp = o.exp * 10
 		o.exp += int32(b - '0')
 	case 8:

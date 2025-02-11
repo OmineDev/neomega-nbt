@@ -87,7 +87,7 @@ func encodeTo(w *writerWithBuffer, input any, caster func(any) any, casted bool)
 				w.WriteByte(' ')
 			}
 			writeInt(w, v)
-			w.WriteString("b")
+			w.WriteByte('b')
 		}
 		w.WriteByte(']')
 		return nil
@@ -99,7 +99,7 @@ func encodeTo(w *writerWithBuffer, input any, caster func(any) any, casted bool)
 				w.WriteByte(' ')
 			}
 			writeInt(w, v)
-			w.WriteString("l")
+			w.WriteByte('l')
 		}
 		w.WriteByte(']')
 		return nil
@@ -190,6 +190,7 @@ func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, caste
 					w.WriteByte(' ')
 				}
 				writeInt(w, int8(val.Index(i).Int()))
+				w.WriteByte('b')
 			}
 			w.WriteByte(']')
 			return nil
@@ -214,6 +215,7 @@ func encodeToWithCast(w *writerWithBuffer, orig any, caster func(any) any, caste
 					w.WriteByte(' ')
 				}
 				writeInt(w, int64(val.Index(i).Int()))
+				w.WriteByte('l')
 			}
 			w.WriteByte(']')
 			return nil
