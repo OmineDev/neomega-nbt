@@ -48,6 +48,10 @@ func TestString(t *testing.T) {
 	assertFail(false)
 	assertArr(src, &IntArray[int32]{}, []int32{12, -34, -567, 89, 10, 11, -12, -13, 14, 15}, t)
 
+	seq = "true,false ]"
+	src = sources.NewBytesSourceFromString(seq)
+	assertArr(src, &IntArray[int32]{}, []int32{1, 0}, t)
+
 	seq = "12, -34 ,-567, 89,10,11 , -12 ,-13 ,14 ,15   "
 	src = sources.NewBytesSourceFromString(seq)
 	assertFail(lflb.ReadFinity(src, &IntArray[int32]{}))

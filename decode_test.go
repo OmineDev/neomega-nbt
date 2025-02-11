@@ -338,6 +338,14 @@ func TestSnbtDecode(t *testing.T) {
 	src = sources.NewBytesSourceFromString(seq)
 	assertVal(`abc_123.+-ABC`)
 
+	seq = "[I; true,false   ] "
+	src = sources.NewBytesSourceFromString(seq)
+	assertArr(src, []int32{1, 0}, t)
+
+	seq = "[B; true,false   ] "
+	src = sources.NewBytesSourceFromString(seq)
+	assertArr(src, []int8{1, 0}, t)
+
 	seq = "[I; 12, -34 ,-567, 89,10,11 , -12 ,-13 ,14 ,15   ] "
 	src = sources.NewBytesSourceFromString(seq)
 	assertArr(src, []int32{12, -34, -567, 89, 10, 11, -12, -13, 14, 15}, t)
