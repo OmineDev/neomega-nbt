@@ -82,21 +82,21 @@ func TestSnbtDecode(t *testing.T) {
 		t.FailNow()
 	}
 
-	// // nbtlib will parse "tRUe" as TAG_Byte(1)
-	// seq = "tRUe"
-	// src = sources.NewBytesSourceFromString(seq)
-	// if v, err := DecodeFrom(src); err != nil || v != byte(1) {
-	// 	t.Errorf("get v: %v\n", v)
-	// 	t.FailNow()
-	// }
+	// nbtlib will parse "tRUe" as TAG_Byte(1)
+	seq = "tRUe"
+	src = sources.NewBytesSourceFromString(seq)
+	if v, err := DecodeFrom(src); err != nil || v != int8(1) {
+		t.Errorf("get v: %v\n", v)
+		t.FailNow()
+	}
 
-	// // nbtlib will parse "FaLSE" as TAG_Byte(0)
-	// seq = "FaLSE"
-	// src = sources.NewBytesSourceFromString(seq)
-	// if v, err := DecodeFrom(src); err != nil || v != byte(0) {
-	// 	t.Errorf("get v: %v\n", v)
-	// 	t.FailNow()
-	// }
+	// nbtlib will parse "FaLSE" as TAG_Byte(0)
+	seq = "FaLSE"
+	src = sources.NewBytesSourceFromString(seq)
+	if v, err := DecodeFrom(src); err != nil || v != int8(0) {
+		t.Errorf("get v: %v\n", v)
+		t.FailNow()
+	}
 
 	// nbtlib will parse this as
 	// TAG_ByteArray([TAG_Byte(1), TAG_Byte(2), TAG_Byte(3)])
