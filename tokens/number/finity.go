@@ -97,6 +97,13 @@ func (o *NumberFinity) FeedEof() lflb.Status {
 	}
 }
 
+func (o *NumberFinity) IsInt32Overflow() bool {
+	if o.dataT != 0 {
+		return false
+	}
+	return int64(int32(o.baseVal)) != o.baseVal
+}
+
 func (o *NumberFinity) Val() any {
 	if o.neg {
 		o.baseVal = -o.baseVal

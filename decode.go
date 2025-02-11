@@ -109,10 +109,22 @@ func decodeFrom[S lflb.Source](src S, preAlloc *preAlloc) (v any, err error) {
 	numberToken.Reset()
 	if ok, counter := lflb.ReadFinityWithCounter(src, numberToken); ok {
 		if b, eof := src.This(); eof || !string_token.AcceptUnwrapStringFeed(b) {
-			return numberToken.Val(), nil
+			if numberToken.IsInt32Overflow() {
+				if src.IsEof() {
+					src.Back(counter)
+				} else {
+					src.Back(counter - 1)
+				}
+			} else {
+				return numberToken.Val(), nil
+			}
 		} else {
 			// sth like 123_abc, now @ _abc
-			src.Back(counter - 1)
+			if src.IsEof() {
+				src.Back(counter)
+			} else {
+				src.Back(counter - 1)
+			}
 		}
 	}
 

@@ -1,6 +1,8 @@
 package int_arr
 
-import "snbt/lflb"
+import (
+	"snbt/lflb"
+)
 
 type IntArray[I interface {
 	int32 | int8 | int64
@@ -108,7 +110,7 @@ func (f *IntArray[I]) Feed(b byte) lflb.Status {
 		f.state = 0x2
 		return lflb.RET_FEED_MORE
 	}
-	if b == ' ' || b == 'B' || b == 'b' || b == 'L' || b == 'l' {
+	if b == ' ' || b == '\n' || b == '\t' || b == '\r' || b == 'B' || b == 'b' || b == 'L' || b == 'l' {
 		return lflb.RET_FEED_MORE
 	}
 	if b == '-' {

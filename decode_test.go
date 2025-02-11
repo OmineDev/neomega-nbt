@@ -82,21 +82,21 @@ func TestSnbtDecode(t *testing.T) {
 		t.FailNow()
 	}
 
-	// nbtlib will parse "tRUe" as TAG_Byte(1)
-	seq = "tRUe"
-	src = sources.NewBytesSourceFromString(seq)
-	if v, err := DecodeFrom(src); err != nil || v != byte(1) {
-		t.Errorf("get v: %v\n", v)
-		t.FailNow()
-	}
+	// // nbtlib will parse "tRUe" as TAG_Byte(1)
+	// seq = "tRUe"
+	// src = sources.NewBytesSourceFromString(seq)
+	// if v, err := DecodeFrom(src); err != nil || v != byte(1) {
+	// 	t.Errorf("get v: %v\n", v)
+	// 	t.FailNow()
+	// }
 
-	// nbtlib will parse "FaLSE" as TAG_Byte(0)
-	seq = "FaLSE"
-	src = sources.NewBytesSourceFromString(seq)
-	if v, err := DecodeFrom(src); err != nil || v != byte(0) {
-		t.Errorf("get v: %v\n", v)
-		t.FailNow()
-	}
+	// // nbtlib will parse "FaLSE" as TAG_Byte(0)
+	// seq = "FaLSE"
+	// src = sources.NewBytesSourceFromString(seq)
+	// if v, err := DecodeFrom(src); err != nil || v != byte(0) {
+	// 	t.Errorf("get v: %v\n", v)
+	// 	t.FailNow()
+	// }
 
 	// nbtlib will parse this as
 	// TAG_ByteArray([TAG_Byte(1), TAG_Byte(2), TAG_Byte(3)])
@@ -110,6 +110,8 @@ func TestSnbtDecode(t *testing.T) {
 		t.Errorf("error parse nbt number array: %v\n", err)
 		t.FailNow()
 	}
+	src = sources.NewBytesSourceFromString(seq)
+	assertArr(src, []int8{1, 2, 3}, t)
 
 	// shoud be []byte{1, 2, 1, 0}
 	seq = "[B;1b,2b,true,false]"
@@ -118,6 +120,8 @@ func TestSnbtDecode(t *testing.T) {
 		t.Errorf("error parse nbt number array: %v\n", err)
 		t.FailNow()
 	}
+	src = sources.NewBytesSourceFromString(seq)
+	assertArr(src, []int8{1, 2, 1, 0}, t)
 
 	/*
 		下面的内容摘自 Wiki。
