@@ -82,6 +82,66 @@ func TestSnbtDecode(t *testing.T) {
 		t.FailNow()
 	}
 
+	// nbtlib will parse "tRUe" as TAG_Byte(1)
+	seq = "tRUe"
+	src = sources.NewBytesSourceFromString(seq)
+	if v, err := DecodeFrom(src); err != nil || v != byte(1) {
+		t.Errorf("get v: %v\n", v)
+		t.FailNow()
+	}
+
+	// nbtlib will parse "FaLSE" as TAG_Byte(0)
+	seq = "FaLSE"
+	src = sources.NewBytesSourceFromString(seq)
+	if v, err := DecodeFrom(src); err != nil || v != byte(0) {
+		t.Errorf("get v: %v\n", v)
+		t.FailNow()
+	}
+
+	// nbtlib will parse this as
+	// TAG_ByteArray([TAG_Byte(1), TAG_Byte(2), TAG_Byte(3)])
+	seq = `[B;
+				1b,
+				2B,
+				3B
+			]`
+	src = sources.NewBytesSourceFromString(seq)
+	if _, err := DecodeFrom(src); err != nil {
+		t.Errorf("error parse nbt number array: %v\n", err)
+		t.FailNow()
+	}
+
+	// shoud be []byte{1, 2, 1, 0}
+	seq = "[B;1b,2b,true,false]"
+	src = sources.NewBytesSourceFromString(seq)
+	if _, err := DecodeFrom(src); err != nil {
+		t.Errorf("error parse nbt number array: %v\n", err)
+		t.FailNow()
+	}
+
+	/*
+		下面的内容摘自 Wiki。
+		-----
+		数值类型标签和字符串标签：
+		1. true 和 false将分别被转换为 1b 和 0b。
+		2. 对于带有字母后缀(B、S、L、F、D，或者它们的小写字母)的数字，
+		   将被解析为相应的数据类型。比如，3s(或3S)将被解析为短整型值，
+		   3.2f(或3.2F)将被解析为单精度浮点型值。
+		3. 若没有指定尾缀，但带有小数点，则该数字会被直接当做双精度浮点数类型的值
+		4. 无小数点的二进制 32 位大小内的数字将被当做整型值。
+		5. 除以上情况以外的其他情况，**都将当做字符串类型的值**。
+		-----
+		下面测试用例的 66666666666 不在 32 位整型范围内，
+		因此其不满足上面的前四种情况。
+		因此，66666666666 被当作字符串类型的值，而非 int32。
+	*/
+	seq = "66666666666"
+	src = sources.NewBytesSourceFromString(seq)
+	if v, err := DecodeFrom(src); err != nil || v != "66666666666" {
+		t.Errorf("get v: %v\n", v)
+		t.FailNow()
+	}
+
 	// number tests
 	seq = "-123,123,-1,1,-1b,1b,103b,-104b,-1s,1s,103s,-104s,-1l,1l,103l,-104l,-56.78,3.2,-3.,-.2,-234.,-.456,123E-2,-.456E1,3.E1,45.58E-12,123.456E-8f,123.456E10d,true,false,3b,end"
 	src = sources.NewBytesSourceFromString(seq)
