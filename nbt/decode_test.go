@@ -3,8 +3,8 @@ package nbt
 import (
 	"bytes"
 	"encoding/hex"
-	"nbt/caster"
-	"nbt/encoding"
+	"neomega_nbt/caster"
+	"neomega_nbt/encoding"
 	"strings"
 	"testing"
 )

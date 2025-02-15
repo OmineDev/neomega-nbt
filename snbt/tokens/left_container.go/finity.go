@@ -1,7 +1,7 @@
 package left_container
 
 import (
-	"nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb"
 )
 
 type LeftContainerFinity struct {

@@ -1,7 +1,7 @@
 package encoding
 
 import (
-	"nbt/base_io"
+	"neomega_nbt/base_io"
 	"unsafe"
 )
 

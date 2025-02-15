@@ -1,8 +1,8 @@
 package snbt
 
 import (
-	"nbt/snbt/nfa"
-	"nbt/snbt/nfa/gen_code"
+	"neomega_nbt/snbt/nfa"
+	"neomega_nbt/snbt/nfa/gen_code"
 	"os"
 )
 

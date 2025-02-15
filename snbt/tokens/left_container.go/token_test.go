@@ -1,9 +1,9 @@
 package left_container
 
 import (
-	"nbt/base_io/lflb"
-	"nbt/base_io/lflb/sources"
-	whitespace "nbt/snbt/tokens/white_space"
+	"neomega_nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb/sources"
+	whitespace "neomega_nbt/snbt/tokens/white_space"
 	"testing"
 )
 

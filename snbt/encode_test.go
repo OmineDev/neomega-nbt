@@ -1,7 +1,7 @@
 package snbt
 
 import (
-	"nbt/caster"
+	"neomega_nbt/caster"
 	"testing"
 )
 

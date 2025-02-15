@@ -1,6 +1,6 @@
 package whitespace
 
-import "nbt/base_io/lflb"
+import "neomega_nbt/base_io/lflb"
 
 type FinityWhiteSpace struct{}
 

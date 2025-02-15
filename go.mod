@@ -1,4 +1,4 @@
-module nbt
+module neomega_nbt
 
 go 1.23.1
 

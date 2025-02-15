@@ -1,9 +1,9 @@
 package whitespace
 
 import (
-	"nbt/base_io/lflb"
-	"nbt/base_io/lflb/sources"
-	"nbt/snbt/tokens"
+	"neomega_nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb/sources"
+	"neomega_nbt/snbt/tokens"
 	"testing"
 )
 

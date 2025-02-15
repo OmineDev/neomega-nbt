@@ -1,10 +1,10 @@
 package string_token
 
 import (
-	"nbt/base_io/lflb"
-	"nbt/base_io/lflb/sources"
-	"nbt/snbt/tokens"
-	whitespace "nbt/snbt/tokens/white_space"
+	"neomega_nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb/sources"
+	"neomega_nbt/snbt/tokens"
+	whitespace "neomega_nbt/snbt/tokens/white_space"
 	"testing"
 )
 

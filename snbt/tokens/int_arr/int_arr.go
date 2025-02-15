@@ -1,7 +1,7 @@
 package int_arr
 
 import (
-	"nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb"
 )
 
 type IntArray[I interface {

@@ -1,6 +1,6 @@
 package encoding
 
-import "nbt/base_io"
+import "neomega_nbt/base_io"
 
 // Encoding is an encoding variant of NBT. In general, there are three different encodings of NBT, which are
 // all the same except for the way basic types are written.

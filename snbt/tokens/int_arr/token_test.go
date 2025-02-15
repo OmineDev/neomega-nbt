@@ -1,8 +1,8 @@
 package int_arr
 
 import (
-	"nbt/base_io/lflb"
-	"nbt/base_io/lflb/sources"
+	"neomega_nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb/sources"
 	"testing"
 )
 

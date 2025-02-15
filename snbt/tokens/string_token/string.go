@@ -1,6 +1,6 @@
 package string_token
 
-import "nbt/base_io/lflb"
+import "neomega_nbt/base_io/lflb"
 
 // abc"
 type StringD struct {

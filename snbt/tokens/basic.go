@@ -2,7 +2,7 @@ package tokens
 
 import (
 	"fmt"
-	"nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb"
 )
 
 type FinityNone struct{}

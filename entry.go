@@ -1,16 +1,16 @@
-package nbt
+package neomega_nbt
 
 import (
 	"bufio"
 	"bytes"
 	"io"
-	"nbt/base_io"
-	"nbt/base_io/lflb"
-	"nbt/base_io/lflb/sources"
-	"nbt/caster"
-	"nbt/encoding"
-	"nbt/nbt"
-	"nbt/snbt"
+	"neomega_nbt/base_io"
+	"neomega_nbt/base_io/lflb"
+	"neomega_nbt/base_io/lflb/sources"
+	"neomega_nbt/caster"
+	"neomega_nbt/encoding"
+	"neomega_nbt/nbt"
+	"neomega_nbt/snbt"
 )
 
 var Caster = caster.DefaultCaster

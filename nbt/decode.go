@@ -2,8 +2,8 @@ package nbt
 
 import (
 	"fmt"
-	"nbt/base_io"
-	"nbt/encoding"
+	"neomega_nbt/base_io"
+	"neomega_nbt/encoding"
 )
 
 type ErrInvalidTagType struct {

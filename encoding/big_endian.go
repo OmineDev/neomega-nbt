@@ -5,7 +5,7 @@ package encoding
 import (
 	"encoding/binary"
 	"math"
-	"nbt/base_io"
+	"neomega_nbt/base_io"
 	"unsafe"
 )
 

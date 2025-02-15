@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"nbt/base_io"
+	"neomega_nbt/base_io"
 	"sort"
 	"strconv"
 	"unsafe"
