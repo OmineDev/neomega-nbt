@@ -86,7 +86,7 @@ func (e ErrListTypeInconsist) Error() string {
 // 	return nil
 // }
 
-func EncodeTagAndValueTo[E encoding.Encoding, W base_io.Writer](
+func EncodeTagAndValueTo[E encoding.WriteEncoding, W base_io.Writer](
 	w W,
 	tagName string,
 	value any,
@@ -99,7 +99,7 @@ func EncodeTagAndValueTo[E encoding.Encoding, W base_io.Writer](
 	return EncodeCleanedTagAndValueTo[E, W](w, valueType, tagName, cleanedValue, caster)
 }
 
-func EncodeCleanedTagAndValueTo[E encoding.Encoding, W base_io.Writer](
+func EncodeCleanedTagAndValueTo[E encoding.WriteEncoding, W base_io.Writer](
 	w W,
 	valueType tagType,
 	tagName string,
@@ -112,7 +112,7 @@ func EncodeCleanedTagAndValueTo[E encoding.Encoding, W base_io.Writer](
 	return EncodeCleanedValueTo[E, W](w, valueType, cleanedValue, caster)
 }
 
-func EncodeCleanedValueTo[E encoding.Encoding, W base_io.Writer](
+func EncodeCleanedValueTo[E encoding.WriteEncoding, W base_io.Writer](
 	w W,
 	valueType tagType,
 	cleanedValue any,

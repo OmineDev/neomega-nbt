@@ -36,22 +36,22 @@ func SNBTEncode(input any, caster func(any) any) (out []byte, err error) {
 	return buf.Bytes(), nil
 }
 
-func NBTDecode[E encoding.Encoding](data []byte, caster func(any) any) (tagName string, value any, err error) {
+func NBTDecode[E encoding.ReadEncoding](data []byte) (tagName string, value any, err error) {
 	return nbt.DecodeTagAndValue[E](bytes.NewReader(data))
 }
 
-func NBTDecodeFrom[E encoding.Encoding](r io.Reader, caster func(any) any) (tagName string, value any, err error) {
+func NBTDecodeFrom[E encoding.ReadEncoding](r io.Reader) (tagName string, value any, err error) {
 	return nbt.DecodeTagAndValue[E](base_io.NewReader(r))
 }
 
-func NBTEncodeTo[E encoding.Encoding](w io.Writer, tag string, value any, caster func(any) any) (err error) {
+func NBTEncodeTo[E encoding.WriteEncoding](w io.Writer, tag string, value any, caster func(any) any) (err error) {
 	buf := bufio.NewWriter(w)
 	err = nbt.EncodeTagAndValueTo[E](buf, tag, value, caster)
 	buf.Flush()
 	return err
 }
 
-func NBTEncode[E encoding.Encoding](tag string, value any, caster func(any) any) (out []byte, err error) {
+func NBTEncode[E encoding.WriteEncoding](tag string, value any, caster func(any) any) (out []byte, err error) {
 	buf := bytes.NewBuffer(nil)
 	err = nbt.EncodeTagAndValueTo[E](buf, tag, value, caster)
 	if err != nil {
