@@ -101,6 +101,13 @@ func DecodeValue[E encoding.ReadEncoding, R base_io.Reader](
 			return nil, err
 		}
 		if tagTypeB == byte(tagEnd) {
+			dataLen, err := e.Int32(r)
+			if err != nil {
+				return nil, err
+			}
+			if dataLen != 0 {
+				fmt.Printf("length should be 0 (type is tag end), but get %v\n", dataLen)
+			}
 			return []any{}, nil
 		}
 		dataLen, err := e.Int32(r)

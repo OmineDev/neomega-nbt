@@ -180,6 +180,7 @@ func EncodeCleanedValueTo[E encoding.WriteEncoding, W base_io.Writer](
 		// special case: 0 length
 		if len(data) == 0 {
 			w.WriteByte(byte(tagEnd))
+			e.WriteInt32(w, int32(0))
 			return nil
 		}
 
