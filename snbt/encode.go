@@ -380,7 +380,7 @@ func writeInt[W base_io.Writer, T interface{ int8 | int16 | int32 | int64 }](w W
 		i = -i
 	}
 	off := 0
-	for i > 10 {
+	for i >= 10 {
 		buf[off] = uint8(i%10) + '0'
 		off += 1
 		i = i / 10
